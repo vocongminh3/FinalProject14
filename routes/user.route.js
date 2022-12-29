@@ -5,6 +5,8 @@ import bcrypt from 'bcryptjs';
 
 const router = express.Router();
 
+
+// Đăng ký tài khoản users.
 router.post('/', async function (req, res)
 {
     let user = req.body;
