@@ -4,14 +4,17 @@ import jwt from 'jsonwebtoken'
 import randomstring from 'randomstring';
 
 import userModel from '../models/user.model.js';
+import validate from '../middle_wares/validate.mdw.js';
 import bcrypt from 'bcryptjs';
 
 
 const router = express.Router();
+const schema = JSON.parse(await readFile(new URL('../schemas/login.json', import.meta.url)));
+const rfschema = JSON.parse(await readFile(new URL('../schemas/rf.json', import.meta.url)));
 
 
 // Đăng nhập vào hệ thống và nhận lại accesstoken và refreshtoken
-router.post('/',  async function (req, res)
+router.post('/',validate(schema),  async function (req, res)
 {
     const user = await userModel.findByUsername(req.body.username);
 
@@ -58,7 +61,7 @@ router.post('/',  async function (req, res)
 
 
 // Refresh lại accesstoken
-router.post('/refresh', async function (req, res)
+router.post('/refresh',validate(rfschema), async function (req, res)
 {
     const { accessToken, refreshToken } = req.body;
     

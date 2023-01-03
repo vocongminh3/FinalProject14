@@ -1,13 +1,16 @@
 import {readFile} from 'fs/promises';
+import auth from '../middle_wares/auth.mdw.js';
+import validate from '../middle_wares/validate.mdw.js';
 import userModel from '../models/user.model.js';
 import express from 'express';
 import bcrypt from 'bcryptjs';
 
 const router = express.Router();
+const schema = JSON.parse(await readFile(new URL('../schemas/user.json', import.meta.url)));
 
 
 // Đăng ký tài khoản users.
-router.post('/', async function (req, res)
+router.post('/', validate(schema), async function (req, res)
 {
     let user = req.body;
 
@@ -27,3 +30,8 @@ router.post('/', async function (req, res)
 });
 
 export default router
+
+
+// router.post('/sendotp'), auth, async function (req, res) {
+
+// }
